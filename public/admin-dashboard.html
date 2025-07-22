@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Employee Management System</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Header Section -->
+        <header class="dashboard-header">
+            <div>
+                <h1><i class="fas fa-user-shield"></i> Admin Dashboard</h1>
+                <p class="welcome-text">Welcome back, Administrator</p>
+            </div>
+            <button id="logoutBtn" class="btn btn-logout">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </header>
+
+        <!-- Stats Overview -->
+        <div class="dashboard-stats">
+            <div class="stat-card">
+                <h3>Total Users</h3>
+                <p id="totalUsers">0</p>
+                <i class="fas fa-users"></i>
+            </div>
+            <div class="stat-card">
+                <h3>Active Today</h3>
+                <p id="activeUsers">0</p>
+                <i class="fas fa-user-check"></i>
+            </div>
+            <div class="stat-card">
+                <h3>Pending Requests</h3>
+                <p id="pendingRequests">0</p>
+                <i class="fas fa-clock"></i>
+            </div>
+            <div class="stat-card">
+                <h3>System Status</h3>
+                <p>Online</p>
+                <i class="fas fa-circle online"></i>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="dashboard-content">
+            <!-- Add User Form -->
+            <section class="user-form">
+                <h2><i class="fas fa-user-plus"></i> Add New User</h2>
+                <form id="userForm">
+                    <div id="message" class="alert" style="display: none;"></div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-user"></i>
+                                <input type="text" id="username" name="username" class="form-control" required 
+                                       placeholder="Enter username">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-envelope"></i>
+                                <input type="email" id="email" name="email" class="form-control" required 
+                                       placeholder="user@example.com">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-lock"></i>
+                                <input type="password" id="password" name="password" class="form-control" required 
+                                       placeholder="••••••••">
+                                <button type="button" class="toggle-password" aria-label="Toggle password visibility">
+                                    <i class="far fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="role">User Role</label>
+                            <div class="select-wrapper">
+                                <i class="fas fa-user-tag"></i>
+                                <select id="role" name="role" class="form-control" required>
+                                    <option value="" disabled selected>Select role</option>
+                                    <option value="user">Standard User</option>
+                                    <option value="admin">Administrator</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-user-plus"></i> Add User
+                        </button>
+                        <button type="reset" class="btn btn-secondary">
+                            <i class="fas fa-undo"></i> Reset
+                        </button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- Users List -->
+            <section class="user-list">
+                <div class="section-header">
+                    <h2><i class="fas fa-users"></i> User Management</h2>
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchUsers" placeholder="Search users...">
+                    </div>
+                </div>
+                
+                <div class="table-responsive">
+                    <div class="user-list-header">
+                        <span>User</span>
+                        <span>Email</span>
+                        <span>Role</span>
+                        <span>Status</span>
+                        <span>Last Active</span>
+                        <span>Actions</span>
+                    </div>
+                    <div id="usersList" class="users-list">
+                        <!-- Users will be dynamically loaded here -->
+                        <div class="loading-state">
+                            <i class="fas fa-spinner fa-spin"></i>
+                            <p>Loading users...</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="pagination">
+                    <button class="btn btn-outline" id="prevPage" disabled>
+                        <i class="fas fa-chevron-left"></i> Previous
+                    </button>
+                    <span id="pageInfo">Page 1 of 1</span>
+                    <button class="btn btn-outline" id="nextPage" disabled>
+                        Next <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </section>
+        </div>
+        
+        <!-- Footer -->
+        <footer class="dashboard-footer">
+            <p>© 2025 Employee Management System | v1.0.0</p>
+            <div class="system-info">
+                <span><i class="fas fa-server"></i> Server: Online</span>
+                <span><i class="fas fa-database"></i> Last Sync: Just now</span>
+            </div>
+        </footer>
+    </div>
+
+    <!-- User Detail Modal -->
+    <div id="userDetailModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>User Details</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body" id="userDetailContent">
+                <!-- User details will be loaded here -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary close-modal">Close</button>
+                <button class="btn btn-danger" id="deleteUserBtn">Delete User</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/admin-dashboard.js"></script>
+    <script>
+        // Toggle password visibility
+        document.querySelectorAll('.toggle-password').forEach(button => {
+            button.addEventListener('click', function() {
+                const passwordInput = this.previousElementSibling;
+                const icon = this.querySelector('i');
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                icon.classList.toggle('fa-eye');
+                icon.classList.toggle('fa-eye-slash');
+            });
+        });
+
+        // Initialize tooltips
+        document.addEventListener('DOMContentLoaded', function() {
+            // This would be replaced with actual tooltip initialization
+            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+        });
+    </script>
+</body>
+</html>
